@@ -1,4 +1,4 @@
-/* Copyright 2024 Jonathan Frankel
+/* Copyright 2024 Jonathan Franker* Copyright 2024 Jonathan Frankel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,9 +39,9 @@ static void init_pins(void) {
 
     gpio_write_pin_low(side_pin[0]);
 
-    // Set rows to input, pullup
+    // Set rows to input, pulldown
     for (uint8_t pin = 0; pin < MATRIX_ROWS; pin++) {
-        gpio_set_pin_input_high(row_pins[pin]);
+        gpio_set_pin_input_low(row_pins[pin]);
     }
 }
 
@@ -53,15 +53,16 @@ static void select_col(uint8_t col)
     else {
         gpio_write_pin_high(side_pin[0]);
     }
-    // for (uint8_t bit = 0; bit < MATRIX_MUX_COLS; bit++) {
-        // uint8_t state = (col & (0b1 << bit)) >> bit;
-    uint8_t idx_0 = (col & 0b00000001) != 0;
-    uint8_t idx_1 = (col & 0b00000010) != 0;
-    uint8_t idx_2 = (col & 0b00000100) != 0;
-    gpio_write_pin(col_pins[0], idx_0);
-    gpio_write_pin(col_pins[1], idx_1);
-    gpio_write_pin(col_pins[2], idx_2);
-    // }
+    for (uint8_t bit = 0; bit < MATRIX_MUX_COLS; bit++) {
+        uint8_t state = (col & (0b1 << bit)) >> bit;
+        gpio_write_pin(col_pins[bit], state);
+    }
+    // uint8_t idx_0 = (col & 0b00000001) != 0;
+    // uint8_t idx_1 = (col & 0b00000010) != 0;
+    // uint8_t idx_2 = (col & 0b00000100) != 0;
+    // gpio_write_pin(col_pins[0], idx_0);
+    // gpio_write_pin(col_pins[1], idx_1);
+    // gpio_write_pin(col_pins[2], idx_2);
 }
 
 static bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col)
@@ -75,7 +76,7 @@ static bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col)
     {
         matrix_row_t last_row_value = current_matrix[row_index];
 
-        if (!gpio_read_pin(row_pins[row_index]))
+        if (gpio_read_pin(row_pins[row_index]))
         {
             current_matrix[row_index] |= (MATRIX_ROW_SHIFTER << current_col);
         }

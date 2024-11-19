@@ -25,7 +25,7 @@
 
 /* key matrix size */
 #define MATRIX_ROWS 4
-#define MATRIX_COLS 10
+#define MATRIX_COLS 12
 #define MATRIX_MUX_COLS 3
 #define MATRIX_MUX_SIDE 1
 
@@ -34,7 +34,7 @@
  * The skeletonkey uses two demultiplexer for the cols and hands.
  * See matrix.c for more details.
 */
-#define MATRIX_ROW_PINS { GP22, GP26, GP27, GP28 }
+#define MATRIX_ROW_PINS { GP28, GP27, GP26, GP22 }
 #define MATRIX_COL_MUX_PINS { GP16, GP17, GP18 }
 #define MATRIX_SIDE_MUX_PIN { GP15 }
 #define MATRIX_COL_PINS { }
